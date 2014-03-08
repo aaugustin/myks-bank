@@ -1,0 +1,46 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}{% load cycle from future %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo;
+<a href="{% url 'admin:app_list' app_label='statements' %}">Statements</a>
+&rsaquo;
+Résumé
+</div>
+{% endblock %}
+
+{% block content %}
+<h2>Répartition des dépenses du mois dernier et de l'année dernière</h2>
+<embed src="{% url 'admin:statement-average-chart' 'month' %}" width="600" height="400">
+<embed src="{% url 'admin:statement-average-chart' 'year' %}" width="600" height="400">
+
+<h2>Évolution sur les douze derniers mois</h2>
+<h3>Dépenses</h3>
+<embed src="{% url 'admin:statement-history-chart' 'debits' %}" width="1200" height="600">
+<h3>Recettes</h3>
+<embed src="{% url 'admin:statement-history-chart' 'credits' %}" width="1200" height="300">
+
+<h2>Solde mois par mois</h2>
+<table id="content-main" class="module">
+    <thead>
+        <tr>
+            <th>Mois</th>
+            <th class="align-right">Crédit</th>
+            <th class="align-right">Débit</th>
+            <th class="align-right">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+            <td>{{ row.0|date:"F Y" }}</td>
+            <td class="align-right">{{ row.1|floatformat:"2" }} €</td>
+            <td class="align-right">{{ row.2|floatformat:"2" }} €</td>
+            <td class="align-right">{{ row.3|floatformat:"2" }} €</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

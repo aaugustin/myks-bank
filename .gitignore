@@ -1,0 +1,4 @@
+*.pyc
+backup*.json
+data
+db.sqlite3

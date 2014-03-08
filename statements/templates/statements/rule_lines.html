@@ -1,0 +1,26 @@
+{% load admin_static %}{% load cycle from future %}{% spaceless %}
+<table style="min-width: 48em;">
+    <thead>
+        <tr>
+            <th style="text-align: center;">Date</th>
+            <th>Libellé</th>
+            <th style="text-align: right;">Montant</th>
+            <th style="text-align: center;">Catégorie</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for line in lines %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+            <td style="text-align: center;">{{ line.date }}</td>
+            <td>{{ line.label }}</td>
+            <td style="text-align: right;">{{ line.amount|floatformat:2 }}</td>
+            <td style="text-align: center;">{% if line.category == rule.category %}<img src="{% static 'admin/img/icon-yes.gif' %}">{% else %}{{ line.category }}{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align: center;">—</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endspaceless %}

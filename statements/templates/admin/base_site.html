@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {% trans 'Relevés LCL' %}{% endblock %}
+
+{% block extrastyle %}
+<style type="text/css">
+#id_pattern { width: 48em ; }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Relevés LCL' %} - <a href="{% url 'admin:statement-summary' %}">Résumé</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
