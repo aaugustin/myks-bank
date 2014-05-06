@@ -27,6 +27,14 @@ INSTALLED_APPS = (
 
 LANGUAGE_CODE = 'fr'
 
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'lcl.middleware.AdminAutoLoginMiddleware',
+)
+
 ROOT_URLCONF = 'lcl.urls'
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
