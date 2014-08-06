@@ -66,7 +66,7 @@ def average_chart(request, period):
     amounts = dict(cursor.execute(sql, [since, until]).fetchall())
 
     categories = (Category.objects
-                          .exclude(name="Virements")
+                          .exclude(order__lt=0)
                           .order_by('order'))
 
     chart = pygal.Pie(width=600, height=400,
@@ -112,7 +112,7 @@ def history_chart(request, kind):
 
     categories = (Category.objects
                           .filter(id__in=cat_ids)
-                          .exclude(name="Virements")
+                          .exclude(order__lt=0)
                           .order_by('-order'))
 
     chart = pygal.StackedLine(width=1200, height=600 if show_debits else 300,

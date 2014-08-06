@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 
 class Category(models.Model):
     name = models.CharField(max_length=40, unique=True, verbose_name="nom")
-    order = models.PositiveSmallIntegerField(verbose_name="ordre")
+    order = models.SmallIntegerField(verbose_name="ordre")
 
     class Meta(object):
         ordering = 'name',
