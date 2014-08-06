@@ -70,7 +70,8 @@ def average_chart(request, period):
                           .order_by('order'))
 
     chart = pygal.Pie(width=600, height=400,
-                      fill=True, style=pygal.style.CleanStyle)
+                      fill=True, include_x_axis=True,
+                      style=pygal.style.CleanStyle)
     for cat_name, cat_id in categories.values_list('name', 'id'):
         chart.add(cat_name, amounts.get(cat_id, 0))
     if None in amounts:
@@ -116,7 +117,8 @@ def history_chart(request, kind):
                           .order_by('-order'))
 
     chart = pygal.StackedLine(width=1200, height=600 if show_debits else 300,
-                              fill=True, style=pygal.style.CleanStyle)
+                              fill=True, include_x_axis=True,
+                              style=pygal.style.CleanStyle)
     chart.x_labels = [month.strftime('%m/%y') for month in months]
     for cat_name, cat_id in categories.values_list('name', 'id'):
         chart.add(cat_name, [amounts.get((month.strftime('%Y%m'), cat_id), 0)
