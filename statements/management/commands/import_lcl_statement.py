@@ -21,7 +21,7 @@ from ...models import Line, Rule
 class CustomConverter(PDFPageAggregator):
 
     # Horizontal coordinates of vertical lines that delimit columns.
-    boundaries = [38, 70, 358, 409, 484, 559]
+    boundaries = [38, 70, 358, 404, 482, 560]
     boundaries = zip(boundaries[:-1], boundaries[1:])
 
     def __init__(self, *args, **kwargs):
