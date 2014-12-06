@@ -67,7 +67,7 @@ def average_chart(request, period):
 
     categories = (Category.objects
                           .exclude(order__lt=0)
-                          .order_by('order'))
+                          .order_by('-order'))
 
     chart = pygal.Pie(width=600, height=400,
                       fill=True, include_x_axis=True,
