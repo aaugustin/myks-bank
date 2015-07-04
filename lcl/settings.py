@@ -16,6 +16,7 @@ DEBUG = True
 DECIMAL_SEPARATOR = ','
 
 INSTALLED_APPS = (
+    'flat',
     'statements',
     'django.contrib.admin',
     'django.contrib.auth',
