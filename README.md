@@ -14,7 +14,7 @@ Utilisation
 
 Installer les dépendances (de préférence dans un virtualenv) :
 
-    pip install -r REQUIREMENTS
+    pip install -r requirements.txt
 
 Avant toute action (à mettre dans le postactivate du virtualenv):
 
