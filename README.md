@@ -12,6 +12,8 @@ Il est conçu pour mon usage personnel en local et n'inclut aucune sécurité.
 Utilisation
 -----------
 
+Utiliser Python 2.7 car la dépendance pdfminer ne supporte pas Python 3.
+
 Installer les dépendances (de préférence dans un virtualenv) :
 
     pip install -r requirements.txt
@@ -22,7 +24,7 @@ Avant toute action (à mettre dans le postactivate du virtualenv):
 
 Créer la base de données :
 
-    ./manage.py syncdb
+    ./manage.py migrate
 
 Lancer le serveur :
 

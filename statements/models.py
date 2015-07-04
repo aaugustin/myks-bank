@@ -60,8 +60,8 @@ class Rule(models.Model):
 
     @cached_property
     def re(self):
-        return '^%s$' % self.pattern.replace(u'--/--/--',
-                                             ur'\d{2}/\d{2}/\d{2}')
+        return '^%s$' % self.pattern.replace('--/--/--',
+                                             r'\d{2}/\d{2}/\d{2}')
 
     @cached_property
     def compiled_re(self):
