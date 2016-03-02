@@ -60,7 +60,7 @@ def average_chart(request, period):
     sql = """
      SELECT category_id, -sum(amount)
       FROM  statements_line
-     WHERE  amount < 0 AND date BETWEEN %s AND %s
+     WHERE  amount < 0 AND amount > -3000 AND date BETWEEN %s AND %s
   GROUP BY  category_id
 """
     amounts = dict(cursor.execute(sql, [since, until]).fetchall())
@@ -98,12 +98,13 @@ def history_chart(request, kind):
     sql = """
     SELECT  strftime('%Y%m', date) AS month, category_id, sum(amount)
       FROM  statements_line
-     WHERE  amount > 0
+     WHERE  amount > 0 AND amount < 3000
   GROUP BY  month, category_id
 """
     if show_debits:
         sql = sql.replace('sum(amount)', '-sum(amount)')
-        sql = sql.replace('amount > 0', 'amount < 0')
+        sql = sql.replace('amount > 0 AND amount < 3000',
+                          'amount < 0 AND amount > -3000')
 
     amounts = {}
     cat_ids = set()
