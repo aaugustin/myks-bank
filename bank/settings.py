@@ -32,10 +32,10 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'lcl.middleware.AdminAutoLoginMiddleware',
+    'bank.middleware.AdminAutoLoginMiddleware',
 ]
 
-ROOT_URLCONF = 'lcl.urls'
+ROOT_URLCONF = 'bank.urls'
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
@@ -60,4 +60,4 @@ TEMPLATES = [
 
 TIME_ZONE = 'Europe/Paris'
 
-WSGI_APPLICATION = 'lcl.wsgi.application'
+WSGI_APPLICATION = 'bank.wsgi.application'
