@@ -22,10 +22,19 @@ class Category(models.Model):
 
 
 class Line(models.Model):
+
+    BANK_CHOICES = [
+        ('CA', "Crédit Agricole"),
+        ('LCL', "Crédit Lyonnais"),
+    ]
+
     label = models.CharField(max_length=100, verbose_name="libellé")
     date = models.DateField(verbose_name="date de valeur")
     amount = models.DecimalField(max_digits=9, decimal_places=2,
                                  verbose_name="crédit ou débit")
+
+    bank = models.CharField(max_length=20, choices=BANK_CHOICES,
+                            verbose_name="banque")
 
     category = models.ForeignKey(Category, blank=True, null=True,
                                  verbose_name="catégorie")

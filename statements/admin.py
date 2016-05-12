@@ -27,9 +27,9 @@ admin.site.register(Category, CategoryAdmin)
 
 class LineAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
-    list_display = 'label', 'date', 'amount', 'category'
+    list_display = 'label', 'date', 'amount', 'bank', 'category'
     list_editable = 'category',
-    list_filter = 'category', 'date'
+    list_filter = 'category', 'bank', 'date'
     ordering = '-date', '-id'
     search_fields = 'label', 'category__name'
 
