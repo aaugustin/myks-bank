@@ -1,4 +1,3 @@
 Django
-django-flat-theme
 pdfminer
 pygal
