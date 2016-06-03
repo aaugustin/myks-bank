@@ -85,7 +85,7 @@ class Command(base.NoArgsCommand):
         verbosity = int(options['verbosity'])
         rules = Rule.objects.all()
         for label, date, amount in rows:
-            line = Line(label=label, date=date, amount=amount)
+            line = Line(label=label, date=date, amount=amount, bank="LCL")
             line.categorize(rules=rules)
             if verbosity >= 1:
                 print("{}  {:+8.2f}  {}".format(date, amount, label))
