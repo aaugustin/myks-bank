@@ -52,9 +52,9 @@ admin.site.register(Line, LineAdmin)
 
 class RuleAdmin(admin.ModelAdmin):
     fields = "pattern", "category", "last_matching_lines"
-    list_display = "pattern", "category"
+    list_display = "pattern", "bank", "category"
     list_editable = ("category",)
-    list_filter = ("category",)
+    list_filter = "category", "bank"
     ordering = "pattern", "category"
     readonly_fields = ("last_matching_lines",)
     search_fields = ("pattern",)

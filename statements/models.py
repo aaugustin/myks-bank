@@ -46,7 +46,7 @@ class Line(models.Model):
 
     def categorize(self, rules=None):
         if rules is None:
-            rules = Rule.objects.all()
+            rules = Rule.objects.filter(bank=self.bank)
         for rule in rules:
             if rule.compiled_re.match(self.label):
                 self.category = rule.category
@@ -54,7 +54,13 @@ class Line(models.Model):
 
 
 class Rule(models.Model):
+
+    BANK_CHOICES = Line.BANK_CHOICES
+
     pattern = models.CharField(max_length=1000, verbose_name="expression régulière")
+
+    bank = models.CharField(max_length=20, choices=BANK_CHOICES, verbose_name="banque")
+
     category = models.ForeignKey(
         to=Category, on_delete=models.CASCADE, verbose_name="catégorie"
     )

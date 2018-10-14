@@ -78,7 +78,7 @@ class Command(base.BaseCommand):
 
         # Process extracted rows.
         verbosity = int(options["verbosity"])
-        rules = Rule.objects.all()
+        rules = Rule.objects.filter(bank="LCL")
         for label, date, amount in rows:
             line = Line(label=label, date=date, amount=amount, bank="LCL")
             line.categorize(rules=rules)
