@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 
-class AdminAutoLoginMiddleware(object):
+class AdminAutoLoginMiddleware:
     """
     Automatically creates and logs in an "admin" user.
 
@@ -14,7 +14,10 @@ class AdminAutoLoginMiddleware(object):
 
     USERNAME = 'admin'
 
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         User = get_user_model()
         username_condition = {User.USERNAME_FIELD: self.USERNAME}
         try:
@@ -26,3 +29,5 @@ class AdminAutoLoginMiddleware(object):
             user.set_unusable_password()
             user.save()
         request.user = user
+
+        return self.get_response(request)

@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-
-from __future__ import unicode_literals
-
 import collections
 import datetime
 import decimal
@@ -22,7 +18,7 @@ class CustomConverter(PDFPageAggregator):
 
     # Horizontal coordinates of vertical lines that delimit columns.
     boundaries = [38, 70, 358, 404, 482, 560]
-    boundaries = zip(boundaries[:-1], boundaries[1:])
+    boundaries = list(zip(boundaries[:-1], boundaries[1:]))
 
     def __init__(self, *args, **kwargs):
         laparams = LAParams(char_margin=1.2, line_margin=0.1)
@@ -68,16 +64,16 @@ class CustomConverter(PDFPageAggregator):
         """Ignore paths."""
 
 
-class Command(base.NoArgsCommand):
+class Command(base.BaseCommand):
     help = "Read PDF statement from stdin and process it."
 
     @transaction.atomic
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         # PDFMiner boilerplate. (Cool API!)
         rsrcmgr = PDFResourceManager()
         device = CustomConverter(rsrcmgr)
         interpreter = PDFPageInterpreter(rsrcmgr, device)
-        for page in PDFPage.get_pages(sys.stdin):
+        for page in PDFPage.get_pages(sys.stdin.buffer):
             interpreter.process_page(page)
         rows = device.rows
 

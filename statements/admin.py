@@ -1,13 +1,10 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import datetime
 
 from django.contrib import admin
 from django.conf.urls import url
 from django.template import Context
 from django.template.loader import get_template
+from django.utils.safestring import mark_safe
 
 from .models import Category, Line, Rule
 from .views import summary, average_chart, history_chart
@@ -64,8 +61,7 @@ class RuleAdmin(admin.ModelAdmin):
             'rule': obj,
             'lines': lines.order_by('-date'),
         }
-        return template.render(context).strip()
-    last_matching_lines.allow_tags = True
+        return mark_safe(template.render(context))
     last_matching_lines.short_description = "Lignes récentes"
 
 admin.site.register(Rule, RuleAdmin)

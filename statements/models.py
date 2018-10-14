@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import re
 
 from django.db import models
@@ -17,7 +13,7 @@ class Category(models.Model):
         verbose_name = "catégorie"
         verbose_name_plural = "catégories"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -36,14 +32,15 @@ class Line(models.Model):
     bank = models.CharField(max_length=20, choices=BANK_CHOICES,
                             verbose_name="banque")
 
-    category = models.ForeignKey(Category, blank=True, null=True,
+    category = models.ForeignKey(to=Category, on_delete=models.CASCADE,
+                                 blank=True, null=True,
                                  verbose_name="catégorie")
 
     class Meta(object):
         verbose_name = "ligne"
         verbose_name_plural = "lignes"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def categorize(self, rules=None):
@@ -58,13 +55,14 @@ class Line(models.Model):
 class Rule(models.Model):
     pattern = models.CharField(max_length=1000,
                                verbose_name="expression régulière")
-    category = models.ForeignKey(Category, verbose_name="catégorie")
+    category = models.ForeignKey(to=Category, on_delete=models.CASCADE,
+                                 verbose_name="catégorie")
 
     class Meta(object):
         verbose_name = "règle"
         verbose_name_plural = "règles"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.pattern
 
     @cached_property

@@ -27,10 +27,10 @@ INSTALLED_APPS = [
 
 LANGUAGE_CODE = 'fr'
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'bank.middleware.AdminAutoLoginMiddleware',
 ]

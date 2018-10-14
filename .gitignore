@@ -1,3 +1,4 @@
+.env
 *.pyc
 backup*.json
 data

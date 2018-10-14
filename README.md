@@ -4,38 +4,29 @@ myks-bank
 Objectifs
 ---------
 
-Cet outil extrait les lignes des relevés de compte PDF de LCL et les
-enregistrer dans une base de données. Il permet aussi de les catégoriser.
+Cet outil extrait les lignes des relevés de compte et les catégorise.
 
 Il est conçu pour mon usage personnel en local et n'inclut aucune sécurité.
 
 Utilisation
 -----------
 
-Utiliser Python 2.7 car la dépendance pdfminer ne supporte pas Python 3.
+Mettre dans .env :
 
-Installer les dépendances (de préférence dans un virtualenv) :
-
-    pip install -r requirements.txt
-
-Avant toute action (à mettre dans le postactivate du virtualenv):
-
-    export DJANGO_SECRET_KEY='<une chaîne aléatoire et secrète>'
+    PYTHONPATH=path/to/myks-bank
+    DJANGO_SETTINGS_MODULE=bank.settings
+    DJANGO_SECRET_KEY=<une chaîne aléatoire et secrète>
 
 Créer la base de données :
 
-    ./manage.py migrate
+    django-admin migrate
 
 Lancer le serveur :
 
-    ./manage.py runserver
+    django-admin runserver
 
 Créer des catégories et des règles de catégorisation dans l'interface web.
 
 Importer un relevé :
 
-    ./manage.py import_lcl_statement < $file.pdf
-
-Sauvegarder la base de données :
-
-    ./manage.py dumpdata > backup.json
+    django-admin import_lcl_statement < $file.pdf
