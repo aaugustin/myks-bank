@@ -12,7 +12,7 @@ class AdminAutoLoginMiddleware:
     Designed for personal applications that only exist on your own computer.
     """
 
-    USERNAME = 'admin'
+    USERNAME = "admin"
 
     def __init__(self, get_response):
         self.get_response = get_response

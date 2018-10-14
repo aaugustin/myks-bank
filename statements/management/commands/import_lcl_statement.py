@@ -3,13 +3,12 @@ import datetime
 import decimal
 import sys
 
+from django.core.management import base
+from django.db import transaction
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LAParams, LTTextBox
 from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from pdfminer.pdfpage import PDFPage
-
-from django.core.management import base
-from django.db import transaction
 
 from ...models import Line, Rule
 
@@ -22,7 +21,7 @@ class CustomConverter(PDFPageAggregator):
 
     def __init__(self, *args, **kwargs):
         laparams = LAParams(char_margin=1.2, line_margin=0.1)
-        kwargs.setdefault('laparams', laparams)
+        kwargs.setdefault("laparams", laparams)
         super(CustomConverter, self).__init__(*args, **kwargs)
         # Public variable holding relevant rows when processing is complete.
         self.rows = []
@@ -45,16 +44,16 @@ class CustomConverter(PDFPageAggregator):
                 del rows[y2]
         # Process relevant rows and store their data.
         for _, row in sorted(rows.items(), reverse=True):
-            row = [' '.join(item) for item in row]
+            row = [" ".join(item) for item in row]
             if not all(row[:3]):
                 continue
-            if row == ['DATE', 'LIBELLE', 'VALEUR', 'DEBIT', 'CREDIT']:
+            if row == ["DATE", "LIBELLE", "VALEUR", "DEBIT", "CREDIT"]:
                 continue
             label = row[1]
-            day, month, year = map(int, row[2].split('.'))
+            day, month, year = map(int, row[2].split("."))
             date = datetime.date(2000 + year, month, day)
-            amount = '-' + row[3] if ',' in row[3] else row[4]
-            amount = decimal.Decimal(amount.replace(' ', '').replace(',', '.'))
+            amount = "-" + row[3] if "," in row[3] else row[4]
+            amount = decimal.Decimal(amount.replace(" ", "").replace(",", "."))
             self.rows.append((label, date, amount))
 
     def render_image(self, name, stream):
@@ -78,7 +77,7 @@ class Command(base.BaseCommand):
         rows = device.rows
 
         # Process extracted rows.
-        verbosity = int(options['verbosity'])
+        verbosity = int(options["verbosity"])
         rules = Rule.objects.all()
         for label, date, amount in rows:
             line = Line(label=label, date=date, amount=amount, bank="LCL")
@@ -86,5 +85,5 @@ class Command(base.BaseCommand):
             if verbosity >= 1:
                 print("{}  {:+8.2f}  {}".format(date, amount, label))
             if verbosity >= 2:
-                print(" -> {}".format(line.category or '???'))
+                print(" -> {}".format(line.category or "???"))
             line.save()

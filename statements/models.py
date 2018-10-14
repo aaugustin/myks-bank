@@ -9,7 +9,7 @@ class Category(models.Model):
     order = models.SmallIntegerField(verbose_name="ordre")
 
     class Meta(object):
-        ordering = 'name',
+        ordering = ("name",)
         verbose_name = "catégorie"
         verbose_name_plural = "catégories"
 
@@ -19,22 +19,23 @@ class Category(models.Model):
 
 class Line(models.Model):
 
-    BANK_CHOICES = [
-        ('CA', "Crédit Agricole"),
-        ('LCL', "Crédit Lyonnais"),
-    ]
+    BANK_CHOICES = [("CA", "Crédit Agricole"), ("LCL", "Crédit Lyonnais")]
 
     label = models.CharField(max_length=100, verbose_name="libellé")
     date = models.DateField(verbose_name="date de valeur")
-    amount = models.DecimalField(max_digits=9, decimal_places=2,
-                                 verbose_name="crédit ou débit")
+    amount = models.DecimalField(
+        max_digits=9, decimal_places=2, verbose_name="crédit ou débit"
+    )
 
-    bank = models.CharField(max_length=20, choices=BANK_CHOICES,
-                            verbose_name="banque")
+    bank = models.CharField(max_length=20, choices=BANK_CHOICES, verbose_name="banque")
 
-    category = models.ForeignKey(to=Category, on_delete=models.CASCADE,
-                                 blank=True, null=True,
-                                 verbose_name="catégorie")
+    category = models.ForeignKey(
+        to=Category,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="catégorie",
+    )
 
     class Meta(object):
         verbose_name = "ligne"
@@ -53,10 +54,10 @@ class Line(models.Model):
 
 
 class Rule(models.Model):
-    pattern = models.CharField(max_length=1000,
-                               verbose_name="expression régulière")
-    category = models.ForeignKey(to=Category, on_delete=models.CASCADE,
-                                 verbose_name="catégorie")
+    pattern = models.CharField(max_length=1000, verbose_name="expression régulière")
+    category = models.ForeignKey(
+        to=Category, on_delete=models.CASCADE, verbose_name="catégorie"
+    )
 
     class Meta(object):
         verbose_name = "règle"
@@ -67,8 +68,7 @@ class Rule(models.Model):
 
     @cached_property
     def re(self):
-        return '^%s$' % self.pattern.replace('--/--/--',
-                                             r'\d{2}/\d{2}/\d{2}')
+        return "^%s$" % self.pattern.replace("--/--/--", r"\d{2}/\d{2}/\d{2}")
 
     @cached_property
     def compiled_re(self):
