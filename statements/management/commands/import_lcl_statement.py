@@ -81,9 +81,13 @@ class Command(base.BaseCommand):
         rules = Rule.objects.filter(bank="LCL")
         for label, date, amount in rows:
             line = Line(label=label, date=date, amount=amount, bank="LCL")
+
             line.categorize(rules=rules)
+
             if verbosity >= 1:
-                print("{}  {:+8.2f}  {}".format(date, amount, label))
-            if verbosity >= 2:
-                print(" -> {}".format(line.category or "???"))
+                print(
+                    f"{date}  {amount:+8.2f}  {label:20}"
+                    f" -> {line.category or '???'}"
+                )
+
             line.save()

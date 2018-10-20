@@ -48,7 +48,7 @@ class Line(models.Model):
         if rules is None:
             rules = Rule.objects.filter(bank=self.bank)
         for rule in rules:
-            if rule.compiled_re.match(self.label):
+            if rule.compiled_re.fullmatch(self.label):
                 self.category = rule.category
                 break
 
@@ -74,7 +74,7 @@ class Rule(models.Model):
 
     @cached_property
     def re(self):
-        return "^%s$" % self.pattern.replace("--/--/--", r"\d{2}/\d{2}/\d{2}")
+        return self.pattern.replace("--", r"[0-9]{2}")
 
     @cached_property
     def compiled_re(self):

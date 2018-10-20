@@ -51,7 +51,7 @@ admin.site.register(Line, LineAdmin)
 
 
 class RuleAdmin(admin.ModelAdmin):
-    fields = "pattern", "category", "last_matching_lines"
+    fields = "pattern", "bank", "category", "last_matching_lines"
     list_display = "pattern", "bank", "category"
     list_editable = ("category",)
     list_filter = "category", "bank"
@@ -60,6 +60,8 @@ class RuleAdmin(admin.ModelAdmin):
     search_fields = ("pattern",)
 
     def last_matching_lines(self, obj):
+        if obj.id is None:
+            return "-"
         since = datetime.date.today() - datetime.timedelta(days=365)
         lines = Line.objects.filter(label__regex=obj.re, date__gte=since)
         template = get_template("statements/rule_lines.html")

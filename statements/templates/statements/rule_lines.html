@@ -14,7 +14,7 @@
             <td style="text-align: center;">{{ line.date }}</td>
             <td>{{ line.label }}</td>
             <td style="text-align: right;">{{ line.amount|floatformat:2 }}</td>
-            <td style="text-align: center;">{% if line.category == rule.category %}<img src="{% static 'admin/img/icon-yes.gif' %}">{% else %}{{ line.category }}{% endif %}</td>
+            <td style="text-align: center;">{% if line.category == rule.category %}<img src="{% static 'admin/img/icon-yes.svg' %}">{% else %}{{ line.category }}{% endif %}</td>
         </tr>
         {% empty %}
         <tr>
