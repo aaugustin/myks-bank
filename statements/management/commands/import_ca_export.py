@@ -9,7 +9,6 @@ from django.db import transaction
 
 from ...models import Category, Line, Rule
 
-
 CATEGORY_MAPPING = {
     "Alimentation": ["Alimentation"],
     "Cadeaux": ["Cadeaux", "Dons"],
@@ -74,7 +73,7 @@ class Command(base.BaseCommand):
             amount = decimal.Decimal(amount.replace(",", "."))
             line = Line(label=label, date=date, amount=amount, bank="CA")
 
-            line.categorize(rules=rules)
+            line.category = line.predict_category(rules)
             if line.category is None:
                 line.category = category_mapping.get(category)
 

@@ -2,34 +2,65 @@ import datetime
 
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.admin.views.main import ChangeList
 from django.template.loader import get_template
+from django.templatetags.static import static
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from .models import Category, Line, Rule
 from .views import average_chart, history_chart, summary
 
 
+def edit(obj):
+    return "Modifier"
+
+
+edit.short_description = "Modifier"
+
+
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = "edit", "order", "name"
-    list_editable = "order", "name"
-    ordering = ("order",)
-
-    def edit(self, obj):
-        return "Modifier"
-
-    edit.short_description = "Modifier"
+    list_display = ["name", "order", edit]
+    list_display_links = [edit]
+    list_editable = ["name", "order"]
+    ordering = ["order"]
+    search_fields = ["name"]
 
 
 admin.site.register(Category, CategoryAdmin)
 
 
+class LineChangeList(ChangeList):
+    def get_results(self, request):
+        super().get_results(request)
+
+        # Annotate queryset with categories defined by rules.
+        rules_cache = {}
+        for line in self.result_list:
+            try:
+                rules = rules_cache[line.bank]
+            except KeyError:
+                rules = Rule.objects.filter(bank=line.bank)
+                rules_cache[line.bank] = rules
+            line.predicted_category = line.predict_category(rules)
+
+
 class LineAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["category"]
     date_hierarchy = "date"
-    list_display = "label", "date", "amount", "bank", "category"
-    list_editable = ("category",)
-    list_filter = "category", "bank", "date"
-    ordering = "-date", "-id"
-    search_fields = "label", "category__name"
+    fields = ["label", "date", "amount", "bank", "category", "predicted_category"]
+    list_display = ["label", "date", "amount", "bank", "category", "match_rules"]
+    list_editable = ["category"]
+    list_filter = ["category", "bank", "date"]
+    ordering = ["-date", "-id"]
+    readonly_fields = ["predicted_category"]
+    search_fields = ["label"]
+
+    def get_changelist(self, request, **kwargs):
+        return LineChangeList
+
+    def get_search_results(self, request, queryset, search_term):
+        return queryset.filter(label__iregex=search_term), False
 
     def get_urls(self):
         return [
@@ -46,18 +77,36 @@ class LineAdmin(admin.ModelAdmin):
             ),
         ] + super(LineAdmin, self).get_urls()
 
+    def match_rules(self, obj):
+        if obj.predicted_category is None:
+            result = "unknown"
+        elif obj.category == obj.predicted_category:
+            result = "yes"
+        else:
+            result = "no"
+        return format_html('<img src="{}">', static(f"admin/img/icon-{result}.svg"))
+
+    match_rules.short_description = "Conforme"
+
+    def predicted_category(self, obj):
+        return obj.predict_category() or "-"
+
+    predicted_category.short_description = "Catégorie prédite"
+
 
 admin.site.register(Line, LineAdmin)
 
 
 class RuleAdmin(admin.ModelAdmin):
-    fields = "pattern", "bank", "category", "last_matching_lines"
-    list_display = "pattern", "bank", "category"
-    list_editable = ("category",)
-    list_filter = "category", "bank"
-    ordering = "pattern", "category"
-    readonly_fields = ("last_matching_lines",)
-    search_fields = ("pattern",)
+    autocomplete_fields = ["category"]
+    fields = ["pattern", "bank", "category", "last_matching_lines"]
+    list_display = ["pattern", "bank", "category", edit]
+    list_display_links = [edit]
+    list_editable = ["pattern", "bank", "category"]
+    list_filter = ["category", "bank"]
+    ordering = ["pattern"]
+    readonly_fields = ["last_matching_lines"]
+    search_fields = ["pattern"]
 
     def last_matching_lines(self, obj):
         if obj.id is None:

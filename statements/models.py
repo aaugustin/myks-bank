@@ -9,7 +9,7 @@ class Category(models.Model):
     order = models.SmallIntegerField(verbose_name="ordre")
 
     class Meta(object):
-        ordering = ("name",)
+        ordering = ["name"]
         verbose_name = "catégorie"
         verbose_name_plural = "catégories"
 
@@ -44,13 +44,12 @@ class Line(models.Model):
     def __str__(self):
         return self.label
 
-    def categorize(self, rules=None):
+    def predict_category(self, rules=None):
         if rules is None:
             rules = Rule.objects.filter(bank=self.bank)
         for rule in rules:
             if rule.compiled_re.fullmatch(self.label):
-                self.category = rule.category
-                break
+                return rule.category
 
 
 class Rule(models.Model):
@@ -66,6 +65,7 @@ class Rule(models.Model):
     )
 
     class Meta(object):
+        ordering = ["pattern"]
         verbose_name = "règle"
         verbose_name_plural = "règles"
 

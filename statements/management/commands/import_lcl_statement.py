@@ -82,7 +82,7 @@ class Command(base.BaseCommand):
         for label, date, amount in rows:
             line = Line(label=label, date=date, amount=amount, bank="LCL")
 
-            line.categorize(rules=rules)
+            line.category = line.predict_category(rules)
 
             if verbosity >= 1:
                 print(

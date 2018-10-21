@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ("order", models.SmallIntegerField(verbose_name="ordre")),
             ],
             options={
-                "ordering": ("name",),
+                "ordering": ["name"],
                 "verbose_name": "cat\xe9gorie",
                 "verbose_name_plural": "cat\xe9gories",
             },
@@ -92,6 +92,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "r\xe8gle", "verbose_name_plural": "r\xe8gles"},
+            options={
+                "ordering": ["pattern"],
+                "verbose_name": "r\xe8gle",
+                "verbose_name_plural": "r\xe8gles",
+            },
         ),
     ]
