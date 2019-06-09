@@ -30,7 +30,7 @@ CATEGORY_MAPPING = {
     "Santé": ["Pharmacie", "Santé/Bien être", "Coiffeur"],
     "Voiture": ["Assurance auto", "Essence", "Parking", "Péages", "Véhicule"],
     "Vêtements": ["Chaussures", "Habillement"],
-    "Virements": ["", "Prêts"],
+    "Virements": [""],
 }
 
 
