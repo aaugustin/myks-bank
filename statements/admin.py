@@ -112,6 +112,8 @@ class RuleAdmin(admin.ModelAdmin):
         if obj.id is None:
             return "-"
         since = datetime.date.today() - datetime.timedelta(days=365)
+        # label__regex does a match, not a fullmatch, so its behavior
+        # may differ slightly from predict_category.
         lines = Line.objects.filter(label__regex=obj.re, date__gte=since)
         template = get_template("statements/rule_lines.html")
         context = {"rule": obj, "lines": lines.order_by("-date")}
