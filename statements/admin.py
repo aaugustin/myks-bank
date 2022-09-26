@@ -1,6 +1,6 @@
 import datetime
 
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.template.loader import get_template
@@ -64,13 +64,13 @@ class LineAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         return [
-            url(r"^summary/$", summary, name="statement-summary"),
-            url(
+            path(r"summary/", summary, name="statement-summary"),
+            re_path(
                 r"^average_chart/(month|year)/$",
                 average_chart,
                 name="statement-average-chart",
             ),
-            url(
+           re_path(
                 r"^history_chart/(credits|debits)/$",
                 history_chart,
                 name="statement-history-chart",

@@ -10,6 +10,8 @@ DEBUG = True
 
 DECIMAL_SEPARATOR = ","
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 INSTALLED_APPS = [
     "statements",
     "django.contrib.admin",
@@ -56,5 +58,7 @@ TEMPLATES = [
 ]
 
 TIME_ZONE = "Europe/Paris"
+
+USE_TZ = True
 
 WSGI_APPLICATION = "bank.wsgi.application"

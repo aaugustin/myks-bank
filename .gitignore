@@ -3,3 +3,4 @@
 backup*.json
 data
 db.sqlite3
+venv
