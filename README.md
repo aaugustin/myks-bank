@@ -11,7 +11,7 @@ Il est conçu pour mon usage personnel en local et n'inclut aucune sécurité.
 Utilisation
 -----------
 
-Mettre dans .env :
+Mettre dans .envrc :
 
     PYTHONPATH=path/to/myks-bank
     DJANGO_SETTINGS_MODULE=bank.settings
