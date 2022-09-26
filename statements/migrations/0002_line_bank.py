@@ -13,7 +13,11 @@ class Migration(migrations.Migration):
                 default="LCL",
                 max_length=20,
                 verbose_name="banque",
-                choices=[("CA", "Cr\xe9dit Agricole"), ("LCL", "Cr\xe9dit Lyonnais")],
+                choices=[
+                    ("BB", "Boursorama Banque"),
+                    ("CA", "Cr\xe9dit Agricole"),
+                    ("LCL", "Cr\xe9dit Lyonnais"),
+                ],
             ),
             preserve_default=False,
         )

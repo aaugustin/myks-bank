@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 (
                     "amount",
                     models.DecimalField(
-                        verbose_name="cr\xe9dit ou d\xe9bit",
+                        verbose_name="montant",
                         max_digits=9,
                         decimal_places=2,
                     ),

@@ -10,7 +10,11 @@ class Migration(migrations.Migration):
             model_name="rule",
             name="bank",
             field=models.CharField(
-                choices=[("CA", "Crédit Agricole"), ("LCL", "Crédit Lyonnais")],
+                choices=[
+                    ("BB", "Boursorama Banque"),
+                    ("CA", "Crédit Agricole"),
+                    ("LCL", "Crédit Lyonnais"),
+                ],
                 default="LCL",
                 max_length=20,
                 verbose_name="banque",

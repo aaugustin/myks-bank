@@ -19,15 +19,24 @@ class Category(models.Model):
 
 class Line(models.Model):
 
-    BANK_CHOICES = [("CA", "Crédit Agricole"), ("LCL", "Crédit Lyonnais")]
+    BANK_CHOICES = [
+        ("BB", "Boursorama Banque"),
+        ("CA", "Crédit Agricole"),
+        ("LCL", "Crédit Lyonnais"),
+    ]
 
     label = models.CharField(max_length=100, verbose_name="libellé")
     date = models.DateField(verbose_name="date de valeur")
     amount = models.DecimalField(
-        max_digits=9, decimal_places=2, verbose_name="crédit ou débit"
+        max_digits=9, decimal_places=2, verbose_name="montant"
+    )
+    balance = models.DecimalField(
+        blank=True, null=True, max_digits=9, decimal_places=2, verbose_name="solde"
     )
 
-    bank = models.CharField(max_length=20, choices=BANK_CHOICES, verbose_name="banque")
+    bank = models.CharField(
+        max_length=20, choices=BANK_CHOICES, verbose_name="banque",
+    )
 
     category = models.ForeignKey(
         to=Category,
@@ -74,7 +83,10 @@ class Rule(models.Model):
 
     @cached_property
     def re(self):
-        return self.pattern.replace("--", r"[0-9]{2}")
+        pattern = self.pattern
+        pattern = pattern.replace("--", r"[0-9]{2}")
+        pattern = pattern.replace("CB*", r"CB\*[0-9]{4}")
+        return pattern
 
     @cached_property
     def compiled_re(self):

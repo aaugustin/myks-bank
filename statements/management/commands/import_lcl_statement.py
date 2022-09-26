@@ -66,6 +66,13 @@ class CustomConverter(PDFPageAggregator):
 class Command(base.BaseCommand):
     help = "Read PDF statement from stdin and process it."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            help="Do not save statement lines to the database.",
+        )
+
     @transaction.atomic
     def handle(self, **options):
         # PDFMiner boilerplate. (Cool API!)
@@ -86,8 +93,10 @@ class Command(base.BaseCommand):
 
             if verbosity >= 1:
                 print(
-                    f"{date}  {amount:+8.2f}  {label:20}"
+                    ("✅" if line.category else "❌") +
+                    f" {date}  {amount:+8.2f}  {label:32}"
                     f" -> {line.category or '???'}"
                 )
 
-            line.save()
+            if not options["dry_run"]:
+                line.save()
