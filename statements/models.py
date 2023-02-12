@@ -84,6 +84,7 @@ class Rule(models.Model):
     @cached_property
     def re(self):
         pattern = self.pattern
+        pattern = pattern.replace("CARTE --/--/--", r"(CARTE|AVOIR) --/--/--")
         pattern = pattern.replace("--", r"[0-9]{2}")
         pattern = pattern.replace("CB*", r"CB\*[0-9]{4}")
         return pattern
