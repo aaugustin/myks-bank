@@ -9,7 +9,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from .models import Category, Line, Rule
-from .views import average_chart, history_chart, summary
+from .views import average_chart, history_chart, last_12m_chart, summary
 
 
 def edit(obj):
@@ -64,14 +64,23 @@ class LineAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         return [
-            path(r"summary/", summary, name="statement-summary"),
+            path(
+                "summary/",
+                summary,
+                name="statement-summary",
+            ),
             re_path(
                 r"^average_chart/(month|year)/$",
                 average_chart,
                 name="statement-average-chart",
             ),
-           re_path(
-                r"^history_chart/(credits|debits)/$",
+           path(
+                "last_12m_chart/",
+                last_12m_chart,
+                name="statement-last-12m-chart",
+            ),
+           path(
+                "history_chart/",
                 history_chart,
                 name="statement-history-chart",
             ),

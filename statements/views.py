@@ -8,6 +8,9 @@ from django.shortcuts import render
 from .models import Category
 
 
+FIRST_YEAR = 2013  # first year with complete records
+
+
 def summary(request):
     cursor = connection.cursor()
     sql = """
@@ -67,7 +70,7 @@ def average_chart(request, period):
         height=400,
         fill=True,
         include_x_axis=True,
-        style=pygal.style.CleanStyle,
+        style=pygal.style.DefaultStyle,
     )
     for cat_name, cat_id in categories.values_list("name", "id"):
         chart.add(cat_name, amounts.get(cat_id, 0))
@@ -76,10 +79,7 @@ def average_chart(request, period):
     return HttpResponse(chart.render(), content_type="image/svg+xml")
 
 
-def history_chart(request, kind):
-    assert kind in ("credits", "debits")
-    show_debits = kind == "debits"
-
+def last_12m_chart(request):
     today = datetime.date.today()
     year, month = today.year, today.month
     months = []
@@ -93,16 +93,11 @@ def history_chart(request, kind):
 
     cursor = connection.cursor()
     sql = """
-    SELECT  strftime('%Y%m', date) AS month, category_id, sum(amount)
+    SELECT  strftime('%Y%m', date) AS month, category_id, sum(-amount)
       FROM  statements_line
-     WHERE  amount > 0 AND amount < 3000
+     WHERE  amount > -3000 AND amount < 3000
   GROUP BY  month, category_id
 """
-    if show_debits:
-        sql = sql.replace("sum(amount)", "-sum(amount)")
-        sql = sql.replace(
-            "amount > 0 AND amount < 3000", "amount < 0 AND amount > -3000"
-        )
 
     amounts = {}
     cat_ids = set()
@@ -116,10 +111,11 @@ def history_chart(request, kind):
 
     chart = pygal.StackedLine(
         width=1200,
-        height=600 if show_debits else 300,
+        height=800,
         fill=True,
+        interpolate='cubic',
         include_x_axis=True,
-        style=pygal.style.CleanStyle,
+        style=pygal.style.DefaultStyle,
     )
     chart.x_labels = [month.strftime("%m/%y") for month in months]
     for cat_name, cat_id in categories.values_list("name", "id"):
@@ -131,5 +127,49 @@ def history_chart(request, kind):
         chart.add(
             "Inconnu",
             [amounts.get((month.strftime("%Y%m"), None), 0) for month in months],
+        )
+    return HttpResponse(chart.render(), content_type="image/svg+xml")
+
+
+def history_chart(request):
+    today = datetime.date.today()
+    years = [datetime.date(year, 1, 1) for year in range(FIRST_YEAR, today.year)]
+
+    cursor = connection.cursor()
+    sql = """
+    SELECT  strftime('%Y', date) AS year, category_id, sum(-amount)
+      FROM  statements_line
+     WHERE  amount > -3000 AND amount < 3000
+  GROUP BY  year, category_id
+"""
+
+    amounts = {}
+    cat_ids = set()
+    for year, cat_id, amount in cursor.execute(sql).fetchall():
+        amounts[(year, cat_id)] = amount
+        cat_ids.add(cat_id)
+
+    categories = (
+        Category.objects.filter(id__in=cat_ids).exclude(order__lt=0).order_by("order")
+    )
+
+    chart = pygal.StackedLine(
+        width=1200,
+        height=800,
+        fill=True,
+        interpolate='cubic',
+        include_x_axis=True,
+        style=pygal.style.DefaultStyle,
+    )
+    chart.x_labels = [year.strftime("%y") for year in years]
+    for cat_name, cat_id in categories.values_list("name", "id"):
+        chart.add(
+            cat_name,
+            [amounts.get((year.strftime("%Y"), cat_id), 0) for year in years],
+        )
+    if None in cat_ids:
+        chart.add(
+            "Inconnu",
+            [amounts.get((year.strftime("%Y"), None), 0) for year in years],
         )
     return HttpResponse(chart.render(), content_type="image/svg+xml")
